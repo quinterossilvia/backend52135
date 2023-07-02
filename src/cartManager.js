@@ -31,7 +31,7 @@ class CartManager {
         const carts = await this.get();
         return carts.find((cart) => cart.id == id);
     }
-
+    
     create = async () => {
         const carts = await this.get();
         const newID = this.getNewID(carts);
