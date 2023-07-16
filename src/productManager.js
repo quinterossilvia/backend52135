@@ -47,20 +47,23 @@ class ProductManager {
     }
   };
 
-  read = () => {
-    if (fs.existsSync(this.path)) {
-      return fs.promises
-        .readFile(this.path, this.format)
-        .then((r) => JSON.parse(r));
+  read = async () => {
+    try {
+      if (fs.existsSync(this.path)) {
+        const content = await fs.promises.readFile(this.path, this.format);
+        return JSON.parse(content);
+      }
+      return [];
+    } catch (error) {
+      throw new Error(`Error reading file: ${error.message}`);
     }
-    return [];
   };
 
   write = async (list) => {
     try {
       await fs.promises.writeFile(this.path, JSON.stringify(list));
     } catch (error) {
-      throw new Error(`Error writing file: ` + error.message);
+      throw new Error(`Error writing file: ${error.message}`);
     }
   };
 
@@ -86,13 +89,12 @@ class ProductManager {
     try {
       obj.id = id;
       const list = await this.read();
-
       const idx = list.findIndex((e) => e.id == id);
       if (idx < 0) return;
       list[idx] = obj;
       await this.write(list);
     } catch (error) {
-      throw new Error(`Error updating product: ` + error.message);
+      throw new Error(`Error updating product: ${error.message}`);
     }
   };
 
@@ -105,8 +107,18 @@ class ProductManager {
       await this.write(list);
       return list;
     } catch (error) {
-      throw new Error(`Error deleting product: ` + error.message);
+      throw new Error(`Error deleting product: ${error.message}`);
     }
+  };
+
+  create = async (data) => {
+    const result = await this.add(data);
+    return result;
+  };
+
+  list = async () => {
+    const result = await this.get();
+    return result;
   };
 }
 

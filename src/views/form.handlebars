@@ -1,0 +1,35 @@
+<h2 class="titulo p-3 d-flex justify-content-center">Create Product</h2>
+<a href="/products">Product List</a>
+<div class="container">
+  
+ 
+  <div class="container">
+    <div class="card bg-light ">
+    <h2 class="d-flex justify-content-center ">Formulario de Productos</h2>
+    <form class="align-self-center" action="/form-products" method="post">
+      <div class="form-group p-2">
+        <input type="text" placeholder="CODE" name="code" required>
+      </div>
+      <div class="form-group p-2">
+        <input type="text" placeholder="TITLE" name="title" required>
+      </div>
+      <div class="form-group p-2">
+        <input type="text" placeholder="DESCRIPTION" name="description" required>
+      </div>
+      <div class="form-group p-2">
+        <input type="number" placeholder="PRICE" name="price" required>
+      </div>
+      <div class="form-group p-2">
+        <input type="text" placeholder="THUMBNAIL" name="thumbnails" required>
+      </div>
+      <div class="form-group p-2">
+        <input type="number" placeholder="STOCK" name="stock" required>
+      </div>
+      <div class="form-group p-2">
+        <input type="text" placeholder="CATEGORY" name="category" required>
+      </div>
+      <div class="form-group p-2 bg-light">
+        <button type="submit">Enviar</button>
+      </div>
+    </form>
+    </div>
