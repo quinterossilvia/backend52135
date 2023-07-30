@@ -1,58 +1,28 @@
-import fs from "fs";
+
+import ProductModel from "../../../models/model.product.js";
 
 class ProductManager {
-  
-  static #path = "./public/products.json";
-
-  constructor() {
-    this.products = [];
-    ProductManager.#path;
-  }
-
-  _getNextId = () => {
-    const count = this.products.length;
+  _getNextOrder = async () => {
+    const count = await ProductModel.count();
     const nextId = count > 0 ? this.products[count - 1].id + 1 : 1;
 
     return nextId;
   };
 
-  addProduct = async (
-    title,
-    description,
-    price,
-    thumbnail,
-    code,
-    stock,
-    category
-  ) => {
-    const products = await this.getProducts();
-
+  addProduct = async (product) => {
     try {
-      const product = {
-        id: this._getNextId(),
-        title,
-        description,
-        price,
-        thumbnail,
-        code,
-        stock,
-        category,
-        status: true,
-      };
-
-      if (products.find((product) => product.code === code)) {
+      const validate = await ProductModel.findOne({ code: product.code });
+      if (validate) {
         console.log(`The product with code: ${product.code} already exists`);
         throw new Error(
           `The product with code: ${product.code} already exists`
         );
-      }
-      products.push(product);
-      await fs.promises.writeFile(
-        ProductManager.#path,
-        JSON.stringify(products, null, "\t")
-      );
+      } else {
+        product.status = true;
 
-      return console.log(products);
+        await ProductModel.create(product);
+        return "Product created successfully";
+      }
     } catch (err) {
       throw err;
     }
@@ -60,113 +30,55 @@ class ProductManager {
 
   getProducts = async () => {
     try {
-      const data = await fs.promises.readFile(ProductManager.#path, "utf-8");
-      const products = JSON.parse(data);
-      this.products = products;
+      const products = ProductModel.find();
 
       return products;
     } catch (err) {
-      console.log("File not found");
+      console.log("Products not found");
       return [];
     }
   };
 
   getProductById = async (id) => {
-    const products = await this.getProducts();
     try {
-      const itemId = Object.values(products).find(
-        (product) => product.id === id
-      );
+      const product = await ProductModel.findById(id);
 
-      if (itemId === undefined) {
-        console.log(`Product with id: ${id} does not exist`);
-        throw new Error(`Product with id: ${id} does not exist`);
-      }
-      console.log(itemId);
-      return itemId;
+      return product;
     } catch (err) {
       throw err;
     }
   };
 
-  updateProduct = async (id, propsProduct) => {
-    const products = await this.getProducts();
+  updateProduct = async (id, props) => {
     try {
-      const index = await products.findIndex((product) => product.id === id);
+      const validate = await ProductModel.findByIdAndUpdate(id, props);
 
-      if (index === -1) {
-        console.log(`Product with id: ${id} does not exist`);
-        throw new Error(`Product with id: ${id} does not exist`);
-      }
-      if (
-        propsProduct.hasOwnProperty("id") ||
-        propsProduct.hasOwnProperty("code")
-      ) {
+      if (props.hasOwnProperty("id") || props.hasOwnProperty("code")) {
         console.log("Cannot update 'id' or 'code' property");
         throw new Error("Cannot update 'id' or 'code' property");
       }
 
-      Object.assign(products[index], propsProduct);
-      await fs.promises.writeFile(
-        ProductManager.#path,
-        JSON.stringify(products),
-        "utf-8"
-      );
-      const updatedProduct = products[index];
+      if (validate === null) {
+        console.log(`Product with id: ${id} does not exist`);
+        throw new Error(`Product with id: ${id} does not exist`);
+      }
 
-      console.log(updatedProduct);
-      return updatedProduct;
+      return "Updated product successfully";
     } catch (err) {
       throw err;
     }
   };
 
   deleteProduct = async (id) => {
-    let products = await this.getProducts();
     try {
-      const product = Object.values(products).find(
-        (product) => product.id === id
-      );
+      const productDeleted = await ProductModel.findByIdAndDelete(id);
 
-      if (!product) {
-        console.log("Product does not exist");
-        throw new Error("Product does not exist");
+      if (productDeleted === null) {
+        console.log(`Product with id: ${id} does not exist`);
+        // throw new Error("Product does not exist");
       }
 
-      products = products.filter((item) => item.id !== id);
-      await fs.promises.writeFile(
-        ProductManager.#path,
-        JSON.stringify(products),
-        "utf-8"
-      );
-
-      console.log("Product removed");
-      return "Product removed";
-    } catch (err) {
-      throw err;
-    }
-  };
-
-  logicalDeleteProduct = async (id) => {
-    let products = await this.getProducts();
-    try {
-      const productIndex = Object.values(products).findIndex(
-        (product) => product.id === id
-      );
-
-      if (productIndex === -1) {
-        console.log("Product does not exist");
-    
-      }
-
-      await fs.promises.writeFile(
-        ProductManager.#path,
-        JSON.stringify(products),
-        "utf-8"
-      );
-
-      console.log("Product logically removed");
-      return "Product logically removed";
+      return "Product removed successfully";
     } catch (err) {
       throw err;
     }

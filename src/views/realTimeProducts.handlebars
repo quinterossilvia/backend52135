@@ -26,7 +26,7 @@
 
 <br>
 
-<h1 class="text-center bg-grey">Ingresa Productos</h1>
+<h1 class="text-center bg-light">Ingresa Productos</h1>
 
 <div style="display: flex; flex-direction: row; justify-content: space-around;">
     <div style="display: flex;">
@@ -59,9 +59,9 @@
             <h3>Eliminación </h3>
 
             <form id="realTimeFormDelete">
-                <label class="form-label m-0">ID:</label>
-                <input class="form-control" type="number" name="id" id="id">
-                <br>
+                <label class="form-label m-0">Colocar ID de MongoDB:</label>
+                <input class="form-control" type="text" name="id" id="id" minlength="24" maxlength="24">
+                <br> 
                 <button class="btn btn-danger" type="submit">Eliminar</button>
             </form>
         </div>

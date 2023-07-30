@@ -8,6 +8,7 @@ import __dirname from './utils.js'
 import mongoose from "mongoose";
 import ChatManager from "./dao/remote/managers/chat/chatManager.js";
 const chatManager = new ChatManager()
+import {MongoClient, ObjectId} from "mongodb"
 
 
 
@@ -58,6 +59,30 @@ mongoose
 
 
 const io = new Server(httpServer);
+async function eliminarProducto(productId) {
+  try {
+    const client = await MongoClient.connect(URL);
+    const db = client.db("libreriaLea");
+
+    const collection = db.collection("products");
+
+    // Convierte el ID del producto a un ObjectId
+    const objectId = new ObjectId(productId);
+
+    // Realiza la eliminación del producto por su ID
+    const result = await collection.deleteOne({ _id: objectId });
+
+    if (result.deletedCount === 1) {
+      console.log("Producto eliminado exitosamente.");
+    } else {
+      console.log("Producto no encontrado o no eliminado.");
+    }
+
+    client.close();
+  } catch (error) {
+    console.log("Error al eliminar el producto:", error);
+  }
+}
 
 io.on("connection", (socket) => {
   console.log(`New user ${socket.id} joined`);
