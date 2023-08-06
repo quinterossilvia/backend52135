@@ -1,1 +1,112 @@
-[]
+[{
+  "_id": {
+    "$oid": "64c58db4b6c6807fefe241c1"
+  },
+  "title": "COCA COLA",
+  "description": "BEBIDA",
+  "price": 100,
+  "thumbnail": [
+    "https://picsum.photos/200"
+  ],
+  "code": "1",
+  "stock": 10,
+  "category": "SIN ALCOHOL",
+  "status": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "64c58dd1b6c6807fefe241c5"
+  },
+  "title": "JAMESON",
+  "description": "BEBIDA",
+  "price": 250,
+  "thumbnail": [
+    "https://picsum.photos/200"
+  ],
+  "code": "2",
+  "stock": 13,
+  "category": "CON ALCOHOL",
+  "status": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "64c58df0b6c6807fefe241c9"
+  },
+  "title": "RED BULL",
+  "description": "BEBIDA",
+  "price": 80,
+  "thumbnail": [
+    "https://picsum.photos/200"
+  ],
+  "code": "3",
+  "stock": 14,
+  "category": "SIN ALCOHOL",
+  "status": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "64c58e10b6c6807fefe241cd"
+  },
+  "title": "LEVITE",
+  "description": "BEBIDA",
+  "price": 80,
+  "thumbnail": [
+    "https://picsum.photos/200"
+  ],
+  "code": "4",
+  "stock": 16,
+  "category": "SIN ALCOHOL",
+  "status": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "64c58e60b6c6807fefe241d4"
+  },
+  "title": "SMIRNOFF",
+  "description": "BEBIDA",
+  "price": 250,
+  "thumbnail": [
+    "https://picsum.photos/200"
+  ],
+  "code": "5",
+  "stock": 18,
+  "category": "CON ALCOHOL",
+  "status": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "64c595c349deb06a0605f495"
+  },
+  "title": "caipirinha",
+  "description": "BEBIDA",
+  "price": 120,
+  "thumbnail": [
+    "https://picsum.photos/200"
+  ],
+  "code": "8",
+  "stock": 18,
+  "category": "CON ALCOHOL",
+  "status": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "64ceb2d64b25e17769e66a35"
+  },
+  "title": "sfsf",
+  "description": "v",
+  "price": 54,
+  "thumbnail": [
+    "https://picsum.photos/200"
+  ],
+  "code": "11454",
+  "stock": 65,
+  "category": "sin alcohol",
+  "status": true,
+  "__v": 0
+}]

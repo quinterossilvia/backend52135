@@ -1,4 +1,4 @@
-import CartModel from "../../../models/model.cart.js";
+import CartModel from "../../../models/model.cart.js"
 
 class CartManager {
   _getNextOrder = async () => {
@@ -8,13 +8,10 @@ class CartManager {
     return nextId;
   };
 
-  createCart = async () => {
+  createCart = async (cart) => {
     try {
-      const cart = {
-        products: [],
-      };
+      const oneCart = await CartModel.create(cart);
 
-      await CartModel.create(cart);
       return "Cart created successfully";
     } catch (err) {
       throw err;
@@ -34,9 +31,9 @@ class CartManager {
 
   getCartById = async (id) => {
     try {
-      const cart = await CartModel.findById(id);
+      const cart = await CartModel.findOne({ _id: id });
 
-      if(cart === null) {
+      if (cart === null) {
         console.error(`Cart with id: ${id} does not exist`);
         throw new Error(`Cart with id: ${id} does not exist`);
       }
@@ -47,17 +44,30 @@ class CartManager {
     }
   };
 
-  updateCart = async (id, arrayProducts) => {
+  updateCart = async (idCart, idProduct, quantity) => {
     try {
-      const validate = await CartModel.findByIdAndUpdate(id, {
-        products: arrayProducts,
-      });
+      const cart = await CartModel.findById(idCart);
 
-      if (validate === null) {
-        console.log(`Cart with id: ${id} does not exist`);
-        throw new Error(`Cart with id: ${id} does not exist`);
+      if (cart === null) {
+        console.log(`Cart with id: ${idCart} does not exist`);
+        throw new Error(`Cart with id: ${idCart} does not exist`);
       }
 
+      if (cart.products.length === 0) {
+        cart.products.push({ product: idProduct, quantity: quantity });
+      }
+
+      const productPosition = cart.products.findIndex(
+        (el) => el.product._id == idProduct
+      );
+
+      if (productPosition !== -1) {
+        cart.products[productPosition].quantity += quantity;
+      } else {
+        cart.products.push({ product: idProduct, quantity: quantity });
+      }
+
+      const newCart = await CartModel.findByIdAndUpdate(idCart, cart);
       return "Cart products updated";
     } catch (err) {
       throw err;
@@ -78,6 +88,58 @@ class CartManager {
       throw err;
     }
   };
+  deleteProduct = async (idCart, idProduct) => {
+    try {
+      const cart = await CartModel.findById(idCart);
+
+      if (cart === null) {
+        console.log(`Cart with id: ${idCart} does not exist`);
+        throw new Error(`Cart with id: ${idCart} does not exist`);
+      }
+
+      const productPosition = cart.products.findIndex(
+        (el) => el.product._id == idProduct
+      );
+
+      if (productPosition === -1) {
+        console.log(`Product with id: ${idProduct} does not exist`);
+        throw new Error(`Product with id: ${idProduct} does not exist`);
+      }
+
+      cart.products.splice(productPosition, 1);
+      let newCart = cart.products;
+      const productDelete = await CartModel.findByIdAndUpdate(idCart, {
+        products: newCart,
+      });
+
+      return "Product removed successfully";
+    } catch (err) {
+      throw err;
+    }
+  };
+
+  deleteProducts = async (idCart) => {
+    try {
+      const cart = await CartModel.findById(idCart);
+
+      if (cart === null) {
+        console.log("Cart does not exist");
+        throw new Error("Cart does not exist");
+      }
+
+      cart.products.splice(0);
+      let newCart = cart.products;
+
+      const productsDelete = await CartModel.findByIdAndUpdate(idCart, {
+        products: newCart,
+      });
+
+      return "Cart removed successfully";
+    } catch (err) {
+      throw err;
+    }
+  };
 }
+
 
 export default CartManager;

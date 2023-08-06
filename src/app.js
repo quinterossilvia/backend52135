@@ -7,11 +7,10 @@ import router from "./routes/index.js";
 import __dirname from './utils.js'
 import mongoose from "mongoose";
 import ChatManager from "./dao/remote/managers/chat/chatManager.js";
-const chatManager = new ChatManager()
 import {MongoClient, ObjectId} from "mongodb"
 
 
-
+const chatManager = new ChatManager()
 const app = express();
 const productManager = new ProductManager();
 const PORT = process.env.PORT || 8080;

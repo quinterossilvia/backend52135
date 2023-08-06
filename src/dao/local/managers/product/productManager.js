@@ -2,6 +2,8 @@
 import ProductModel from "../../../models/model.product.js";
 
 class ProductManager {
+  static #path = "./products.json"
+
   _getNextOrder = async () => {
     const count = await ProductModel.count();
     const nextId = count > 0 ? this.products[count - 1].id + 1 : 1;

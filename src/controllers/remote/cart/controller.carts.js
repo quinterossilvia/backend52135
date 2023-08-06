@@ -1,8 +1,10 @@
 import CartManager from "../../../dao/remote/managers/cart/cartManager.js";
-const cartManager = new CartManager();
 import ProductManager from "../../../dao/remote/managers/product/productManager.js";
-const productManager = new ProductManager();
 import { Router } from "express";
+const cartManager = new CartManager();
+
+const productManager = new ProductManager();
+
 const router = Router();
 
 router.post("/", async (req, res) => {

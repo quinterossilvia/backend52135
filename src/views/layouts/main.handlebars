@@ -9,7 +9,36 @@
     <title>{{title}}</title>
 </head>
 <body>
- 
+ <nav class="navbar navbar-expand-sm bg-light">
+    <div class="container-fluid">
+        <a href="../../home">
+            <img src="./static/assets/images/logo.jpg" width="80px" alt="logo"
+                class="d-inline-block align-text-top me-3 header__img" />
+        </a>
+    </div>
+    <div class="d-flex collapse navbar-collapse " id="navbarNav">
+        <ul class="navbar-nav align-items-center header__lista">
+            <li class="nav-item ms-3 header__item">
+                <a class="nav-link" href="../../home">Inicio</a>
+            </li>
+            <li class="nav-item ms-3 header__item">
+                <a class="nav-link" href="../../realTimeProducts">Productos</a>
+            </li>
+            <li class="nav-item ms-3 header__item">
+                <a class="nav-link" href="../../productsList">Lista</a>
+            </li>
+            <li class="nav-item ms-3 header__item">
+                <a class="nav-link active" href="../../form">Nuevo Producto</a>
+            </li>
+             <li class="nav-item ms-3 header__item">
+                <a class="nav-link active" href="../../chat">Chat</a>
+            </li>
+            <li class="nav-item ms-3 header__item">
+                <a class="nav-link" href="../../cart/64c58db4b6c6807fefe241c1">Cart</a>
+            </li>
+        </ul>
+    </div>
+</nav>
     {{{body}}}
 </body>
 </html>
