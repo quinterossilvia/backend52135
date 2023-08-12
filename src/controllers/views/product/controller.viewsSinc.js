@@ -5,12 +5,10 @@ const productManager = new ProductManager();
 const router = Router();
 
 router.get("/", async (req, res) => {
-  try {
-    const products = await productManager.getProducts();
-    res.render("realTimeProducts", { products });
-  } catch (error) {
-    res.status(500).send("Error fetching products.");
-  }
+  const products = await productManager.getProducts();
+  const user = req.session.user;
+
+  res.render("realTimeProducts", { products, user });
 });
 
 export default router;

@@ -1,50 +1,43 @@
-
-
-<h1 class="text-center bg-light">Ingresa Productos</h1>
-
-<div style="display: flex; flex-direction: row; justify-content: space-around;">
-    <div style="display: flex;">
-        <div style="display: flex; flex-direction: column; align-items: center;">
-            <h3>Carga datos</h3>
-
-            <form id="realTimeFormCreate">
-                <label class="form-label m-0">Title:</label>
-                <input class="form-control" type="text" name="title" id="title" required>
-                <label class="form-label m-0">Description:</label>
-                <input class="form-control" type="text" name="description" id="description" required>
-                <label class="form-label m-0">Price:</label>
-                <input class="form-control" type="number" name="price" id="price" required>
-                <label class="form-label m-0">Thumbnail:</label>
-                <input class="form-control" type="text" name="thumbnail" id="thumbnail">
-                <label class="form-label m-0">Code:</label>
-                <input class="form-control" type="text" name="code" id="code" required>
-                <label class="form-label m-0">Stock:</label>
-                <input class="form-control" type="number" name="stock" id="stock" required>
-                <label class="form-label m-0">Category:</label>
-                <input class="form-control" type="text" name="category" id="category" required>
-                <br>
-                <button class="btn btn-success" type="submit">Cargar</button>
-            </form>
-        </div>
+<nav class="navbar navbar-expand-sm bg-light navbar-bg-light">
+    <div class="container-fluid">
+        <a href="../../realTimeProducts">
+            <img src="../public/assets/images/logo.jpg" width="50px" alt="logo"
+                class="d-inline-block align-text-top me-3 header__img" />
+        </a>
     </div>
-
-    <div style="display: flex;">
-        <div style="display: flex; flex-direction: column; align-items: center;">
-            <h3>Eliminación </h3>
-
-            <form id="realTimeFormDelete">
-                <label class="form-label m-0">Colocar ID de MongoDB:</label>
-                <input class="form-control" type="text" name="id" id="id" minlength="24" maxlength="24">
-                <br> 
-                <button class="btn btn-danger" type="submit">Eliminar</button>
-            </form>
-        </div>
+    <div class="d-flex collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav align-items-center header__lista">
+            <li class="nav-item ms-3 header__item">
+                <a class="nav-link active" href="#">Products</a>
+            </li>
+            <li class="nav-item ms-3 header__item">
+                <a class="nav-link" href="../../productsList">List</a>
+            </li>
+            <li class="nav-item ms-3 header__item">
+                <a class="nav-link" href="../../chat">Chat</a>
+            </li>
+            <li class="nav-item ms-3 header__item">
+                <a class="nav-link" href="../../cart/64c58db4b6c6807fefe241c1">Cart</a>
+            </li>
+            <li class="nav-item ms-3 header__item">
+                <a class="nav-link" href="/api/session/logout">
+                    <img src="https://i.ibb.co/j8FWHKq/switch-off.png" alt="shut-down" width="30px">
+                </a>
+            </li>
+            <li class="nav-item ms-3 header__item" style="margin-right: 24px;">
+                <a class="nav-link" href="../../profile">
+                    <img src="https://i.ibb.co/3WdFcqG/profile.png" alt="profile" width="30px">
+                </a>
+            </li>
+        </ul>
     </div>
-</div>
+</nav>
 
 <br>
 
-<h2 class="text-center">Productos</h2>
+<h1 class="text-center">Products for {{user.first_name}} {{user.last_name}}</h1>
+
+<br>
 
 <div style="display: flex; flex-wrap: wrap; justify-content: center;" id="list">
     {{#each products}}
@@ -60,6 +53,8 @@
     {{/if}}
     {{/each}}
 </div>
+
+
 
 <script src="/socket.io/socket.io.js"></script>
 

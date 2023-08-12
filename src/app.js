@@ -1,30 +1,22 @@
-
 import express from "express";
+import router from "./routes/index.js";
 import handlebars from "express-handlebars";
 import { Server } from "socket.io";
-import ProductManager from "./dao/remote/managers/product/productManager.js";
-import router from "./routes/index.js";
-import __dirname from './utils.js'
 import mongoose from "mongoose";
+import session from "express-session";
+import MongoStore from "connect-mongo";
+import ProductManager from "./dao/remote/managers/product/productManager.js";
 import ChatManager from "./dao/remote/managers/chat/chatManager.js";
-import {MongoClient, ObjectId} from "mongodb"
+import __dirname from "./utils.js";
 
-
-const chatManager = new ChatManager()
 const app = express();
+const chatManager = new ChatManager();
 const productManager = new ProductManager();
 const PORT = process.env.PORT || 8080;
-app.engine('handlebars', handlebars.engine())
-app.set('views', __dirname + '/views')
+
 app.use("/static", express.static("./src/public"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-
-app.set("views", "./src/views");
-app.set("view engine", "handlebars");
-
-router(app);
 
 const hbs = handlebars.create({
   runtimeOptions: {
@@ -34,13 +26,35 @@ const hbs = handlebars.create({
 });
 
 app.engine("handlebars", hbs.engine);
+app.set("views", "./src/views");
+app.set("view engine", "handlebars");
+
+const URL =
+  "mongodb+srv://quinterossilvia:queen.queen@cluster0.mnj66vk.mongodb.net/?retryWrites=true&w=majority";
+
+
+app.use(
+  session({
+    store: MongoStore.create({
+      mongoUrl: URL,
+      dbName: "CodeBar",
+      mongoOptions: {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+      },
+      ttl: 1000,
+    }),
+    secret: "secret",
+    resave: true,
+    saveUninitialized: true,
+  })
+);
+
+router(app);
 
 const httpServer = app.listen(PORT, (req, res) => {
   console.log(`Server running at port: ${PORT}`);
 });
-
-const URL =
-  "mongodb+srv://quinterossilvia:queen.queen@cluster0.mnj66vk.mongodb.net/?retryWrites=true&w=majority";
 
 mongoose
   .connect(URL, {
@@ -55,33 +69,7 @@ mongoose
     console.log("Can't connect to DB");
   });
 
-
-
 const io = new Server(httpServer);
-async function eliminarProducto(productId) {
-  try {
-    const client = await MongoClient.connect(URL);
-    const db = client.db("libreriaLea");
-
-    const collection = db.collection("products");
-
-    // Convierte el ID del producto a un ObjectId
-    const objectId = new ObjectId(productId);
-
-    // Realiza la eliminación del producto por su ID
-    const result = await collection.deleteOne({ _id: objectId });
-
-    if (result.deletedCount === 1) {
-      console.log("Producto eliminado exitosamente.");
-    } else {
-      console.log("Producto no encontrado o no eliminado.");
-    }
-
-    client.close();
-  } catch (error) {
-    console.log("Error al eliminar el producto:", error);
-  }
-}
 
 io.on("connection", (socket) => {
   console.log(`New user ${socket.id} joined`);
@@ -132,15 +120,13 @@ io.on("connection", (socket) => {
     io.emit("server:list", listProducts);
   });
 
-
   //Recibe del front
   socket.on("client:message", async (data) => {
-    await chatManager.saveMessage(data)
+    await chatManager.saveMessage(data);
     //Envia el back
-    const messages = await chatManager.getMessages()
-    io.emit("server:messages", messages)
-  })
-
+    const messages = await chatManager.getMessages();
+    io.emit("server:messages", messages);
+  });
 
   socket.on("disconnect", () => {
     console.log(`User ${socket.id} disconnected`);

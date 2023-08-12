@@ -2,9 +2,7 @@ import CartManager from "../../../dao/remote/managers/cart/cartManager.js";
 import ProductManager from "../../../dao/remote/managers/product/productManager.js";
 import { Router } from "express";
 const cartManager = new CartManager();
-
 const productManager = new ProductManager();
-
 const router = Router();
 
 router.post("/", async (req, res) => {
@@ -41,23 +39,21 @@ router.post("/:cid/product/:pid", async (req, res) => {
     } else {
       let newCart = cart.products;
       const productPosition = cart.products.findIndex((el) => el._id === pid);
-      const updatedQuantity = newCart[productPosition].quantity = quantity;
+      const updatedQuantity = (newCart[productPosition].quantity = quantity);
 
       console.log(updatedQuantity);
 
       const updatedProduct = {
         _id: product._id,
         title: productTitle,
-        quantity: updatedQuantity
-      }
+        quantity: updatedQuantity,
+      };
 
       console.log(updatedProduct);
-
 
       const updatedCart = await cartManager.updateCart(cid, newCart);
 
       console.log(updatedCart);
-
 
       res.status(200).json("Product quantity updated");
     }
@@ -102,6 +98,5 @@ router.delete("/:cid", async (req, res) => {
     }
   }
 });
-
 
 export default router;

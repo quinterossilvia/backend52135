@@ -82,6 +82,25 @@ class ProductManager {
       throw err;
     }
   };
+  logicalDeleteProduct = async (id) => {
+    try {
+      const product = await ProductModel.findById(id);
+
+      if (!product) {
+        console.log("Product does not exist");
+        throw new Error("Product does not exist");
+      }
+
+      product.status = false;
+
+      await product.save();
+
+      console.log("Product status updated successfully");
+      return "Product status updated successfully";
+    } catch (err) {
+      throw err;
+    }
+  };
 }
 
 export default ProductManager;

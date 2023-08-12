@@ -93,45 +93,48 @@ router.get("/productsList", async (req, res) => {
       lean: true,
     });
 
+    let prevLink;
+    let nextLink;
+
+    if(result.hasPrevPage == false) {
+      prevLink = null;
+    } else {
+      prevLink = `/productsList?page=${result.prevPage}&limit=${limit}`
+    }
+
+    if(result.hasNextPage == false) {
+      nextLink = null;
+    } else {
+      nextLink = `/productsList?page=${result.nextPage}&limit=${limit}`
+    }
+
     result.nextLink = result.hasNextPage ? `/productsList?page=${result.nextPage}&limit=${limit}` : "";
     result.prevLink = result.hasPrevPage ? `/productsList?page=${result.prevPage}&limit=${limit}` : "";
-    result.nextPagee = result.hasNextPage ? `/productsList?page=${result.nextPage}&limit=${limit}` : "";
-    result.prevPagee = result.hasPrevPage ? `/productsList?page=${result.prevPage}&limit=${limit}` : "";
 
-    res.render("productsList", result);
+    const format = {
+      status: 'success',
+      payload: result.docs,
+      totalPages: result.totalDocs,
+      prevPage: result.prevPage,
+      nextPage: result.nextPage,
+      page: result.page,
+      hasPrevPage: result.hasPrevPage,
+      hasNextPage: result.hasNextPage,
+      prevLink: prevLink,
+      nextLink: nextLink,
+      limit
+    };
+
+    console.log(format);
+
+    res.render("productsList", {result: format});
   } catch (err) {
     res.status(400).json({ error400: err });
   }
 });
 
-
-router.get("/realtimeproducts", async (req, res) => {
-  const products = await productManager.getProducts();
-  res.render("realTimeProducts", { products: products });
-  
-});
-
-
 router.get("/form", (req, res) => {
   res.render("form", {});
-});
-
-router.delete("/:pid", async (req, res) => {
-  const { pid } = req.params;
-  try {
-    // Convertir el pid a un objeto ObjectId
-    const productId = mongoose.Types.ObjectId(pid);
-
-    const productDeleted = await productManager.deleteProduct(productId);
-
-    if (productDeleted) {
-      res.status(200).json(`Product with id: ${pid} was removed`);
-    } else {
-      res.status(404).json({ error400: "Product does not exist" });
-    }
-  } catch (err) {
-    res.status(500).json({ error500: "Internal Server Error" });
-  }
 });
 
 export default router;
